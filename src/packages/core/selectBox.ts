@@ -17,7 +17,6 @@ class SelectedBox {
     const { selectedElements } = this.editor;
 
     const size = selectedElements.size();
-    // console.log(size, 'size');
 
     if (size > 0) {
       switch (size) {
@@ -56,10 +55,11 @@ class SelectedBox {
     }
   }
 
-  drawBox(ctx: CanvasRenderingContext2D, polygon: IPoint[]) {
+  private drawBox(ctx: CanvasRenderingContext2D, polygon: IPoint[]) {
     const stroke = this.editor.setting.getSettingValue('selectBoxStroke');
     const strokeWidth = this.editor.setting.getSettingValue('selectBoxStrokeWidth');
     ctx.save();
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.translate(0.5, 0.5);
     ctx.beginPath();
     ctx.strokeStyle = stroke;

@@ -1,6 +1,7 @@
 import { CursorManger } from './cursorManager';
 import { CanvasGraphics } from './graphics/canvas';
 import { GlobalDocument } from './graphics/document';
+import HostEventManager from './hostEventManager/hostEventManager';
 import SceneRenderer from './sceneRenderer';
 import SelectedBox from './selectBox';
 import SelectedElements from './selectedElements';
@@ -26,6 +27,7 @@ export class YEditor {
   toolManager: ToolManager;
   doc: GlobalDocument;
   selectedBox: SelectedBox;
+  hostEventManager: HostEventManager;
 
   constructor(options: IEditorOptions) {
     this.editorContainer = options.editorContainer;
@@ -42,6 +44,8 @@ export class YEditor {
     this.sceneRenderer = new SceneRenderer(this);
 
     this.selectedBox = new SelectedBox(this);
+    this.hostEventManager = new HostEventManager(this);
+
     this.doc = new GlobalDocument({
       id: '0-0',
       objectName: 'Document',

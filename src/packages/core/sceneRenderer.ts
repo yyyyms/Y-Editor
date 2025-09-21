@@ -33,6 +33,7 @@ class SceneRenderer {
   render = rafThrottle(() => {
     const { setting, canvasElement: canvas, ctx } = this.editor;
     const zoom = this.editor.viewportManager.getZoom();
+
     const { selectedElements } = this.editor;
     // const { _selectElements } = this.editor;
     ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -41,14 +42,18 @@ class SceneRenderer {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.restore();
 
+    const viewMatrix = new Matrix().append(this.editor.viewportManager.getViewMatrix());
+    ctx.setTransform(...viewMatrix.getArray());
+
     // 绘制拖拽选中框
     if (this.selection) {
       const { width, height } = this.selection;
       ctx.save();
-      // ctx.translate(0.5, 0.5);
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
       ctx.strokeStyle = setting.getSettingValue('selectionStroke');
       ctx.fillStyle = setting.getSettingValue('selectionFill');
       const { x: xInViewport, y: yInViewport } = this.editor.toViewportPt(this.selection.x, this.selection.y);
+
       const widthInViewport = width * zoom;
       const heightInViewport = height * zoom;
 

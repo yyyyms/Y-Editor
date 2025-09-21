@@ -4,6 +4,11 @@ import type YEditor from './editor';
 import { Matrix } from '../geo/geoMatrixClass';
 import type { IBox } from '../geo/type';
 
+/**
+ * 可视区管理
+ * 画板移动 缩放等走这里
+ * 下游绘制方法实现时兼容矩阵的变换
+ */
 class ViewportManager {
   private viewMatrix = new Matrix();
   private editor: YEditor;
@@ -54,6 +59,16 @@ class ViewportManager {
     this.editor.canvasElement.style.width = `${width}px`;
     this.editor.canvasElement.height = height;
     this.editor.canvasElement.style.height = `${height}px`;
+  }
+
+  // 画板平移调整
+  translate(dx: number, dy: number) {
+    const newViewMatrix = this.viewMatrix.clone().translate(dx, dy);
+    this.setViewMatrix(newViewMatrix);
+  }
+
+  setViewMatrix(viewMatrix: Matrix) {
+    this.viewMatrix = viewMatrix;
   }
 
   getZoom() {
