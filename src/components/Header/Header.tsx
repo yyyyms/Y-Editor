@@ -7,8 +7,6 @@ export function Header() {
   return (
     <div className={classNames(style['y-editor-header'])}>
       <ToolBar />
-      <div className={classNames(style['y-editor-right-area'])}>
-      </div>
     </div>
   );
 }

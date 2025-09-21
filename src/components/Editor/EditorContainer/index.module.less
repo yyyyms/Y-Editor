@@ -1,8 +1,9 @@
 .app-container {
   width: 100%;
-  height: calc(100vh - 48px);;
+  height: 100vh;
   display: flex;
-
+  background-color: var(--base-bg);
+  
   .view-content {
     width: 100%;
     height: 100%;
@@ -10,18 +11,29 @@
   }
 
   .left-menu {
+    position: absolute;
+    z-index: 1;
+    left: 30px;
+    top: 10dvh;
     min-width: 240px;
-    width: 240px;
-    height: 100%;
-    border-right: 1px solid #e6e6e6;
+    min-width: 200px;
+    min-height: 500px;
+    border: 1px solid #e6e6e6;
+    background-color: #fff;
     box-sizing: border-box;
+    border-radius: 10px;
   }
 
   .right-panel {
-    min-width: 240px;
-    width: 240px;
-    height: 100%;
-    border-left: 1px solid #e6e6e6;
+    position: absolute;
+    top: 10dvh;
+    right: 30px;
+    z-index: 1;
+    min-width: 200px;
+    min-height: 500px;
+    background-color: #fff;
+    border-radius: 10px;
+    border: 1px solid #e6e6e6;
     box-sizing: border-box;
   }
 }

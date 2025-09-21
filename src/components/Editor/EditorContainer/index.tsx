@@ -13,8 +13,8 @@ function EditorContainer() {
   useEffect(() => {
     const editor = new YEditor({
       editorContainer: editorContainerRef.current!,
-      offsetY: 48, // 后续算上顶栏的高度
-      offsetX: 240,
+      offsetY: 0,
+      offsetX: 0,
     });
     setEditor(editor);
     editor.viewportManager.setViewportSize({
