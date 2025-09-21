@@ -12,7 +12,7 @@ import Graphics from '.';
 export interface RectAttrs extends GraphicsAttrs {
   cornerRadius?: number;
 }
-class RectGraphics extends Graphics {
+class RectGraphics extends Graphics<RectAttrs> {
   override type = GraphicsType.Rect;
 
   constructor(

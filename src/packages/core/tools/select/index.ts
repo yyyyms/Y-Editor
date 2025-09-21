@@ -7,6 +7,7 @@ import type YEditor from '../../editor';
 import type { IBaseTool, ITool } from '../type';
 import { DrawSelectionTool } from './selection';
 import { getTopHitElement } from './utils';
+import GraphicsMoveTool from '../graphicsMove';
 
 const TYPE = 'select';
 const HOTKEY = 'v';
@@ -21,10 +22,12 @@ class SelectTool implements ITool {
   private currStrategy: IBaseTool | null = null;
   private editor: YEditor;
   private strategyDrawSelection: DrawSelectionTool;
+  private strategyGraphicsMove: GraphicsMoveTool;
 
   constructor(editor: YEditor) {
     this.editor = editor;
     this.strategyDrawSelection = new DrawSelectionTool(editor);
+    this.strategyGraphicsMove = new GraphicsMoveTool(editor);
   }
 
   handleHoverItemChange = () => {
@@ -95,12 +98,11 @@ class SelectTool implements ITool {
         selectedElements.setItems([topHitElement]);
         // 渲染出选中框
         this.editor.sceneRenderer.render();
+        this.currStrategy = this.strategyGraphicsMove;
       } else {
         // 3.点击空白区域
         this.currStrategy = this.strategyDrawSelection;
       }
-
-      // 进入拖动移动场景
     }
 
     if (this.currStrategy) {
