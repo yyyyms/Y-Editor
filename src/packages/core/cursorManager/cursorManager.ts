@@ -1,0 +1,126 @@
+import './cursor.css';
+
+import { isEqual } from '@packages/common';
+// import { normalizeDegree } from '@suika/geo';
+
+import type { YEditor } from '../editor';
+import { getIconSvgDataUrl } from './util';
+
+export interface ICursorRotation {
+  type: 'rotation';
+  degree: number;
+}
+
+interface ICursorResize {
+  type: 'resize';
+  degree: number;
+}
+
+export type ICursor =
+  | 'default'
+  | ICursorResize
+  | ICursorRotation
+  | 'grab'
+  | 'grabbing'
+  | 'move'
+  | 'move-ns'
+  | 'move-ew'
+  | 'pointer'
+  | 'crosshair'
+  | 'text'
+  | 'pen'
+  | 'pen-close'
+  | 'pen-anchor-remove'
+  | 'pen-anchor-add'
+  | 'pencil';
+
+export class CursorManger {
+  private cursor!: ICursor;
+  // the cursors with custom style, need to add class to canvas element
+  private customClassCursor = new Set<ICursor>([
+    'default',
+    'move',
+    'move-ns',
+    'move-ew',
+    'pen',
+    'pen-close',
+    'pen-anchor-remove',
+    'pen-anchor-add',
+    'crosshair',
+    'pencil',
+  ]);
+
+  private editor: YEditor;
+  constructor(editor: YEditor) {
+    this.editor = editor;
+    this.setCursor('default');
+  }
+
+  getCursor(): ICursor {
+    return this.cursor;
+  }
+
+  private normalizeCursor(cursor: ICursor): ICursor {
+    if (typeof cursor === 'string') {
+      return cursor;
+    }
+
+    if (cursor.type === 'resize') {
+      return {
+        type: cursor.type,
+        // degree: 0 ~ 179. e.g 0 is from top to bottom , 90 is from left to right
+        // degree: normalizeDegree(cursor.degree) % 180,
+        degree: cursor.degree,
+      };
+    }
+
+    if (cursor.type === 'rotation') {
+      return {
+        type: cursor.type,
+        // degree: normalizeDegree(Math.round(cursor.degree)),
+        degree: Math.round(cursor.degree),
+      };
+    }
+
+    return cursor;
+  }
+
+  setCursor(cursor: ICursor) {
+    cursor = this.normalizeCursor(cursor);
+    if (isEqual(cursor, this.cursor)) {
+      return;
+    }
+
+    this.cursor = cursor;
+
+    // custom class cursor
+    const clsPrefix = 'suika-cursor-';
+
+    const { canvasElement } = this.editor;
+    canvasElement.classList.forEach((className) => {
+      if (className.startsWith(clsPrefix)) {
+        canvasElement.classList.remove(className);
+      }
+    });
+    this.editor.canvasElement.style.cursor = '';
+
+    if (this.customClassCursor.has(cursor)) {
+      const className = `${clsPrefix}${cursor}`;
+      this.editor.canvasElement.classList.add(className);
+    } else if (typeof cursor == 'string') {
+      this.editor.canvasElement.style.cursor = cursor;
+    } else if (cursor.type === 'resize' || cursor.type === 'rotation') {
+      this.editor.canvasElement.style.cursor = getIconSvgDataUrl(
+        cursor.type,
+        cursor.degree,
+      );
+    }
+  }
+}
+
+export function isRotationCursor(cursor: ICursor): cursor is ICursorRotation {
+  return (
+    typeof cursor === 'object'
+    && (cursor as ICursorRotation)?.type === 'rotation'
+  );
+}

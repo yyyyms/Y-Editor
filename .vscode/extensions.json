@@ -1,0 +1,10 @@
+{
+  "recommendations": [
+    "dbaeumer.vscode-eslint",
+    "streetsidesoftware.code-spell-checker",
+    "lokalise.i18n-ally",
+    "stylelint.vscode-stylelint",
+    "clinyong.vscode-css-modules",
+    "phoenisx.cssvar"
+  ]
+}
