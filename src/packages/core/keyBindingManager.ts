@@ -3,8 +3,5 @@ export interface IKey {
   shiftKey?: boolean;
   altKey?: boolean;
   metaKey?: boolean;
-  /**
-   * KeyboardEvent['code'] or '*'(match any key)
-   */
   keyCode: string;
 }

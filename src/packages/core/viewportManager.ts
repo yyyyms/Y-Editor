@@ -1,4 +1,5 @@
-import type { ISize } from '@/types/common';
+/* eslint-disable prefer-const */
+import type { IPoint, ISize } from '@/types/common';
 
 import type YEditor from './editor';
 import { Matrix } from '../geo/geoMatrixClass';
@@ -72,8 +73,50 @@ class ViewportManager {
   }
 
   getZoom() {
-    return this.zoom;
+    return this.viewMatrix.a;
   }
+
+  zoomOut(opts: { center: IPoint; deltaY: number }) {
+    const prevZoom = this.getZoom();
+    let zoom: number;
+    const zoomStep = opts?.deltaY
+      ? deltaYToZoomStep(opts.deltaY)
+      : this.editor.setting.getSettingValue('zoomStep');
+    zoom = Math.max(
+      prevZoom / (1 + zoomStep),
+      this.editor.setting.getSettingValue('zoomMin'),
+    );
+
+    this.setZoom(zoom, opts.center);
+  }
+
+  setZoom(zoom: number, center: IPoint) {
+    const deltaZoom = zoom / this.getZoom();
+    const newViewMatrix = this.viewMatrix
+      .clone()
+      .translate(-center.x, -center.y)
+      .scale(deltaZoom, deltaZoom)
+      .translate(center.x, center.y);
+    this.setViewMatrix(newViewMatrix);
+  }
+
+  zoomIn(opts: { center: IPoint; deltaY: number }) {
+    const prevZoom = this.getZoom();
+
+    let zoom: number;
+    const zoomStep = opts?.deltaY
+      ? deltaYToZoomStep(opts.deltaY)
+      : this.editor.setting.getSettingValue('zoomStep');
+    zoom = Math.min(
+      prevZoom * (1 + zoomStep),
+      this.editor.setting.getSettingValue('zoomMax'),
+    );
+    this.setZoom(zoom, opts.center);
+  }
+}
+
+function deltaYToZoomStep(deltaY: number) {
+  return Math.max(0.05, 0.12937973 * Math.log(Math.abs(deltaY)) - 0.33227472);
 }
 
 export default ViewportManager;

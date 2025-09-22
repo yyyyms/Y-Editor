@@ -14,8 +14,28 @@ class HostEventManager {
 
   private bindWheelEvent() {
     const handleWheel = (event: WheelEvent) => {
-      this.editor.viewportManager.translate(-event.deltaX, -event.deltaY);
-      this.editor.render();
+      const { editor } = this;
+      if (event.metaKey || event.altKey) {
+        event.preventDefault();
+        const point = this.editor.getCursorXY(event);
+        const isZoomOut = event.deltaY > 0;
+
+        if (isZoomOut) {
+          editor.viewportManager.zoomOut({
+            center: point,
+            deltaY: event.deltaY,
+          });
+        } else {
+          editor.viewportManager.zoomIn({
+            center: point,
+            deltaY: event.deltaY,
+          });
+        }
+        this.editor.render();
+      } else {
+        this.editor.viewportManager.translate(-event.deltaX, -event.deltaY);
+        this.editor.render();
+      }
     };
 
     this.editor.canvasElement.addEventListener('wheel', handleWheel);

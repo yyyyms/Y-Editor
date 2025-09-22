@@ -204,6 +204,13 @@ class ToolManager {
     return this.currentTool?.type;
   }
 
+  getCurrPoint() {
+    return this.editor.toScenePt(
+      this.currViewportPoint.x,
+      this.currViewportPoint.y,
+    );
+  }
+
   isDragging() {
     return this._isDragging;
   }

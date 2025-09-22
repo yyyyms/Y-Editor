@@ -34,6 +34,10 @@ class Setting {
     highlightLayersOnHover: boolean;
     hoverOutlineStrokeWidth: number;
     hoverOutlineStroke: string;
+
+    zoomStep: number;
+    zoomMin: number;
+    zoomMax: number;
   };
 
   constructor(partialVal: Partial<SettingValue>) {
@@ -65,6 +69,11 @@ class Setting {
       highlightLayersOnHover: true,
       hoverOutlineStrokeWidth: 2,
       hoverOutlineStroke: '#1592fe',
+
+      zoomStep: 0.2325,
+      zoomMin: 0.015625,
+      zoomMax: 256,
+
       ...partialVal,
     };
   }
